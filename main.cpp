@@ -413,9 +413,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		MatrixScreenPrintf(0, kRowHeight * 5 * 2, resultMultiply);
 		MatrixScreenPrintf(0, kRowHeight * 5 * 3, inverseM1);
 		MatrixScreenPrintf(0, kRowHeight * 5 * 4, inverseM2);
-		MatrixScreenPrintf(kColumnWidth * 5, 0, transposeM1/*, "transposeM1"*/);
-		MatrixScreenPrintf(kColumnWidth * 5, kRowHeight * 5, transposeM2/*, "transposeM2"*/);
-		MatrixScreenPrintf(kColumnWidth * 5, kRowHeight * 5 * 2, identiny/*,"idensty"*/);
+		MatrixScreenPrintf(kColumnWidth * 5, 0, transposeM1);
+		MatrixScreenPrintf(kColumnWidth * 5, kRowHeight * 5, transposeM2);
+		MatrixScreenPrintf(kColumnWidth * 5, kRowHeight * 5 * 2, identiny);
 
 
 		///
