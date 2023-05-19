@@ -134,18 +134,12 @@ Vector3 Cross(const Vector3& v1, const Vector3& v2)
 
 }
 
-void MatrixScreenPrintf(int x, int y, const Matrix4x4& matrix, const char* label)
+void VectorScreenPrintf(int x, int y, Vector3& vector, const char* label)
 {
-	for (int row = 0; row < 4; ++row)
-	{
-		for (int column = 0; column < 4; ++column)
-		{
-			Novice::ScreenPrintf(
-				x + column * kColumnWidth, y + row * kRowHeight + 20, "%6.02f", matrix.m[row][column]);
-		}
-	}
-
-	Novice::ScreenPrintf(x, y, "%s", label);
+	Novice::ScreenPrintf(x, y, "%0.2f", vector.x);
+	Novice::ScreenPrintf(x + kColumnWidth, y, "%0.2f", vector.y);
+	Novice::ScreenPrintf(x + kColumnWidth * 2, y, "%0.2f", vector.z);
+	Novice::ScreenPrintf(x + kColumnWidth * 3, y, "%s", label);
 }
 
 // Windowsアプリでのエントリーポイント(main関数)
@@ -158,9 +152,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	char keys[256] = { 0 };
 	char preKeys[256] = { 0 };
 
-	Vector3 scale{ 1.2f,0.79f,-2.1f };
-	Vector3 rotate{ 0.4f,1.43f,-0.8f };
-	Vector3 translate{ 2.7f,-4.15f,1.57f };
+	Vector3 v1{ 1.2f, -3.9f, 2.5f };
+	Vector3 v2{ 2.8f, 0.4f, -1.3f };
+	Vector3 cross = Cross(v1, v2);
+
+	Vector3 rotate{};
+	Vector3 translate{};
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
@@ -175,9 +172,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓更新処理ここから
 		///
 
-		Vector3 v1{ 1.2f, -3.9f, 2.5f };
-		Vector3 v2{ 2.8f, 0.4f, -1.3f };
-		Vector3 cross = Cross(v1, v2);
+		Matrix4x4 worldMatrix = MakeAffineMatrix
 
 		///
 		/// ↑更新処理ここまで
