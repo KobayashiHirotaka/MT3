@@ -1,5 +1,4 @@
 #pragma once
-#include <Novice.h>
 #include <cmath>
 #include <assert.h>
 
@@ -10,38 +9,36 @@ struct Vector3
 	float z;
 };
 
-struct Matrix4x4 
+struct Matrix4x4
 {
 	float m[4][4];
 };
 
-struct Sphere 
+struct Sphere
 {
 	Vector3 center;
 	float radius;
 };
 
-struct Line 
+struct Line
 {
 	Vector3 origin;
 	Vector3 diff;
 };
 
-struct Ray 
+struct Ray
+{
+	Vector3 origin;
+	Vector3 diff;
+};
+struct Segment
 {
 	Vector3 origin;
 	Vector3 diff;
 };
 
-struct Segment 
-{
-	Vector3 origin;
-	Vector3 diff;
-};
 
-
-class MyMath
-{
+class MyMath {
 public:
 	static float Dot(const Vector3& v1, const Vector3& v2)
 	{
@@ -51,7 +48,7 @@ public:
 		return result;
 	}
 
-	static Vector3 Add(const Vector3& v1, const Vector3& v2)
+	static Vector3 Add(const Vector3& v1, const Vector3& v2) 
 	{
 		Vector3 result{};
 		result.x = v1.x + v2.x;
@@ -60,7 +57,7 @@ public:
 		return result;
 	}
 
-	static Vector3 Cross(const Vector3& v1, const Vector3& v2) 
+	static Vector3 Cross(const Vector3& v1, const Vector3& v2)
 	{
 		Vector3 result{};
 		result.x = v1.y * v2.z - v1.z * v2.y;
@@ -79,7 +76,7 @@ public:
 		return result;
 	}
 
-	static Vector3 Multiply(const float& v1, const Vector3& v2)
+	static Vector3 Multiply(const float& v1, const Vector3& v2) 
 	{
 		Vector3 result{};
 		result.x = v1 * v2.x;
@@ -97,9 +94,9 @@ public:
 			for (int column = 0; column < 4; column++)
 			{
 				result.m[row][column] = m1.m[row][0] * m2.m[0][column] + m1.m[row][1] * m2.m[1][column] + m1.m[row][2] * m2.m[2][column] + m1.m[row][3] * m2.m[3][column];
+
 			}
 		}
-
 		return result;
 	}
 
@@ -109,7 +106,7 @@ public:
 
 		for (int i = 0; i < 4; i++)
 		{
-			for (int j = 0; j < 4; j++)
+			for (int j = 0; j < 4; j++) 
 			{
 				result.m[i][j] = 0;
 			}
@@ -132,9 +129,9 @@ public:
 	{
 		Matrix4x4 result{};
 
-		for (int i = 0; i < 4; i++)
+		for (int i = 0; i < 4; i++) 
 		{
-			for (int j = 0; j < 4; j++) 
+			for (int j = 0; j < 4; j++)
 			{
 				result.m[i][j] = 0;
 			}
@@ -148,7 +145,7 @@ public:
 		return result;
 	}
 
-	static Matrix4x4 MakeRotateXMatrix(float radian)
+	static Matrix4x4 MakeRotateXMatrix(float radian) 
 	{
 		Matrix4x4 result{ };
 
@@ -158,6 +155,7 @@ public:
 		result.m[2][1] = -(std::sin(radian));
 		result.m[2][2] = std::cos(radian);
 		result.m[3][3] = 1;
+
 
 		return result;
 	}
@@ -177,7 +175,7 @@ public:
 		return result;
 	}
 
-	static Matrix4x4 MakeRotateZMatrix(float radian)
+	static Matrix4x4 MakeRotateZMatrix(float radian) 
 	{
 		Matrix4x4 result{ };
 
@@ -188,6 +186,7 @@ public:
 		result.m[2][2] = 1;
 		result.m[3][3] = 1;
 
+
 		return result;
 	}
 
@@ -195,10 +194,9 @@ public:
 	{
 		Matrix4x4 result{};
 
-		
-		Matrix4x4 rotateXYZMatrix = Multiply(	MakeRotateXMatrix(rotate.x),Multiply(MakeRotateYMatrix(rotate.y), MakeRotateZMatrix(rotate.z)));
+		Matrix4x4 rotateXYZMatrix = Multiply(MakeRotateXMatrix(rotate.x),Multiply(MakeRotateYMatrix(rotate.y), MakeRotateZMatrix(rotate.z)));
 
-		
+
 		result.m[0][0] = rotateXYZMatrix.m[0][0] * scale.x;
 		result.m[0][1] = rotateXYZMatrix.m[0][1] * scale.x;
 		result.m[0][2] = rotateXYZMatrix.m[0][2] * scale.x;
@@ -226,9 +224,9 @@ public:
 	{
 		Matrix4x4 result{};
 
-		for (int i = 0; i < 4; i++)
+		for (int i = 0; i < 4; i++) 
 		{
-			for (int j = 0; j < 4; j++)
+			for (int j = 0; j < 4; j++) 
 			{
 				result.m[i][j] = 0;
 			}
@@ -246,9 +244,10 @@ public:
 	static Matrix4x4 MakeOrthographicMatrix(float left, float top, float right, float bottom, float nearClip, float farClip)
 	{
 		Matrix4x4 result{};
-		for (int i = 0; i < 4; i++) 
+
+		for (int i = 0; i < 4; i++)
 		{
-			for (int j = 0; j < 4; j++) 
+			for (int j = 0; j < 4; j++)
 			{
 				result.m[i][j] = 0;
 			}
@@ -271,9 +270,10 @@ public:
 	static Matrix4x4 MakeViewPortMatrix(float left, float top, float width, float height, float minDepth, float maxDepth)
 	{
 		Matrix4x4 result{};
+
 		for (int i = 0; i < 4; i++)
 		{
-			for (int j = 0; j < 4; j++) 
+			for (int j = 0; j < 4; j++)
 			{
 				result.m[i][j] = 0;
 			}
@@ -290,7 +290,7 @@ public:
 		return result;
 	}
 
-	static Matrix4x4 Inverse(const Matrix4x4& m)
+	static Matrix4x4 Inverse(const Matrix4x4& m) 
 	{
 		float a =
 			m.m[0][0] * m.m[1][1] * m.m[2][2] * m.m[3][3]
@@ -328,6 +328,7 @@ public:
 
 
 		Matrix4x4 result{};
+
 		result.m[0][0] =
 			(m.m[1][1] * m.m[2][2] * m.m[3][3]
 				+ m.m[1][2] * m.m[2][3] * m.m[3][1]
@@ -497,14 +498,13 @@ public:
 
 		return result;
 	}
-
 	static Matrix4x4 Transpose(const Matrix4x4& m) 
 	{
 		Matrix4x4 result{};
 
 		for (int row = 0; row < 4; row++)
 		{
-			for (int column = 0; column < 4; column++) 
+			for (int column = 0; column < 4; column++)
 			{
 				result.m[row][column] = m.m[column][row];
 			}
@@ -517,9 +517,9 @@ public:
 	{
 		Matrix4x4 result{};
 
-		for (int row = 0; row < 4; row++) 
+		for (int row = 0; row < 4; row++)
 		{
-			for (int column = 0; column < 4; column++) 
+			for (int column = 0; column < 4; column++)
 			{
 				result.m[row][column] = 0;
 			}
@@ -533,7 +533,7 @@ public:
 		return result;
 	}
 
-	static Vector3 TransformCoord(Vector3 vector, Matrix4x4 matrix) 
+	static Vector3 TransformCoord(Vector3 vector, Matrix4x4 matrix)
 	{
 		Vector3 result{};
 		result.x = vector.x * matrix.m[0][0] + vector.y * matrix.m[1][0] + vector.z * matrix.m[2][0] + 1.0f * matrix.m[3][0];
@@ -548,7 +548,7 @@ public:
 		return result;
 	}
 
-	static Vector3 Project(const Vector3& v1, const Vector3& v2) 
+	static Vector3 Project(const Vector3& v1, const Vector3& v2)
 	{
 		Vector3 result{};
 
@@ -560,7 +560,7 @@ public:
 		return result;
 	}
 
-	static Vector3 ClosestPoint(const Vector3& point, const Segment& segment) 
+	static Vector3 ClosestPoint(const Vector3& point, const Segment& segment)
 	{
 		float t = Dot(Subtract(point, segment.origin), segment.diff) / std::powf(Length(segment.diff), 2.0f);
 		Vector3 result = Add(segment.origin, Multiply(t, segment.diff));
@@ -579,8 +579,7 @@ public:
 		return result;
 	}
 
-
-	static Vector3 Normalize(const Vector3& v)
+	static Vector3 Normalize(const Vector3& v) 
 	{
 		Vector3 result;
 		result.x = v.x / Length(v);
@@ -592,24 +591,33 @@ public:
 		return result;
 	}
 
-	static float Clamp(float num, float max, float min) 
+	static float Clamp(float num, float max, float min)
 	{
-		if (num > max)
+		if (num > max) 
 		{
 			return max;
 		}
-
-		else if (num < min) 
+		else if (num < min)
 		{
 			return min;
 		}
-
 		else 
 		{
 			return num;
 		}
 	}
+	static bool IsCollision(const Sphere& s1, const Sphere& s2)
+	{
+		float distance = Length(Subtract(s2.center, s1.center));
 
+		if (distance <= s1.radius + s2.radius)
+		{
+			return	true;
+		}
+
+		return false;
+
+	}
 
 	static void DrawGrid(const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix)
 	{
@@ -624,7 +632,7 @@ public:
 		Vector3 screenStripeVer[2]{};
 
 
-		for (uint32_t xIndex = 0; xIndex <= kSubdivision; ++xIndex) 
+		for (uint32_t xIndex = 0; xIndex <= kSubdivision; ++xIndex)
 		{
 
 
@@ -642,35 +650,21 @@ public:
 			Vector3 ndcStripeEnd = TransformCoord(localStripeVer[1], viewProjectionMatrix);
 
 
-
-
 			screenBorderVer[0] = TransformCoord(ndcBorderStart, viewportMatrix);
 			screenBorderVer[1] = TransformCoord(ndcBorderEnd, viewportMatrix);
 
 			screenStripeVer[0] = TransformCoord(ndcStripeStart, viewportMatrix);
 			screenStripeVer[1] = TransformCoord(ndcStripeEnd, viewportMatrix);
 
-			Novice::DrawLine(
-				int(screenBorderVer[0].x), int(screenBorderVer[0].y),
-				int(screenBorderVer[1].x), int(screenBorderVer[1].y),
-				0xAAAAAAFF);
+			Novice::DrawLine(int(screenBorderVer[0].x), int(screenBorderVer[0].y),int(screenBorderVer[1].x), int(screenBorderVer[1].y),0xAAAAAAFF);
 
-			Novice::DrawLine(
-				int(screenStripeVer[0].x), int(screenStripeVer[0].y),
-				int(screenStripeVer[1].x), int(screenStripeVer[1].y),
-				0xAAAAAAFF);
+			Novice::DrawLine(int(screenStripeVer[0].x), int(screenStripeVer[0].y),int(screenStripeVer[1].x), int(screenStripeVer[1].y),0xAAAAAAFF);
 
 			if (localBorderVer[0].z == 0) 
 			{
-				Novice::DrawLine(
-					int(screenStripeVer[0].x), int(screenStripeVer[0].y),
-					int(screenStripeVer[1].x), int(screenStripeVer[1].y),
-					0x000000FF);
+				Novice::DrawLine(int(screenStripeVer[0].x), int(screenStripeVer[0].y),int(screenStripeVer[1].x), int(screenStripeVer[1].y),0x000000FF);
 
-				Novice::DrawLine(
-					int(screenBorderVer[0].x), int(screenBorderVer[0].y),
-					int(screenBorderVer[1].x), int(screenBorderVer[1].y),
-					0x000000FF);
+				Novice::DrawLine(int(screenBorderVer[0].x), int(screenBorderVer[0].y),int(screenBorderVer[1].x), int(screenBorderVer[1].y),0x000000FF);
 			}
 
 		}
@@ -686,11 +680,11 @@ public:
 		for (uint32_t latIndex = 0; latIndex < kSubdivision; ++latIndex) 
 		{
 			float lat = -3.14f / 2.0f + kLatEvery * latIndex;
-	
+
 			for (uint32_t lonIndex = 0; lonIndex < kSubdivision; ++lonIndex)
 			{
 				float lon = lonIndex * kLonEvery;
-		
+
 				Vector3 a, b, c;
 				a.x = sphere.center.x + sphere.radius * std::cosf(lat) * std::cosf(lon);
 				a.y = sphere.center.y + sphere.radius * std::sinf(lat);
@@ -712,7 +706,6 @@ public:
 				Vector3 screenB = TransformCoord(ndcB, viewportMatrix);
 				Vector3 screenC = TransformCoord(ndcC, viewportMatrix);
 
-
 				Novice::DrawLine(int(screenA.x), int(screenA.y), int(screenB.x), int(screenB.y), color);
 				Novice::DrawLine(int(screenA.x), int(screenA.y), int(screenC.x), int(screenC.y), color);
 
@@ -721,5 +714,3 @@ public:
 	}
 
 };
-
-
