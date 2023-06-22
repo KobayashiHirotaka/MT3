@@ -84,10 +84,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 
 
-
 		MyMath::DrawGrid(worldViewProjectionMatrix, viewportMatrix);
-
-
 
 		ImGui::Begin("Debug");
 		ImGui::DragFloat3("cameraTRa", &cameraTranslate.x, 0.1f, -50.0f, 50.0f);
