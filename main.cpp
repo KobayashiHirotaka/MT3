@@ -14,13 +14,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// ライブラリの初期化
 	Novice::Initialize(kWindowTitle, kWindowWidth, kWindowHeight);
 
+	
 	Vector3 cameraTranslate{ 0.0f, 1.9f, -6.49f };
 	Vector3 cameraRotate{ 0.26f, 0.0f, 0.0f };
 
-	Sphere sphere
+
+	Segment segment
 	{
 		{0.0f, 0.0f, 0.0f},
-		1.0f
+		{1.0f, 1.0f, 1.0f}
 	};
 
 	Plane plane
@@ -50,7 +52,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓更新処理ここから
 		///
 
-
+	
 		Matrix4x4 worldMatrix = MyMath::MakeAffineMatrix({ 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f });
 		Matrix4x4 cameraMatrix = MyMath::MakeAffineMatrix({ 1.0f, 1.0f, 1.0f }, cameraRotate, cameraTranslate);
 		Matrix4x4 viewMatrix = MyMath::Inverse(cameraMatrix);
@@ -58,11 +60,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		Matrix4x4 worldViewProjectionMatrix = MyMath::Multiply(worldMatrix, MyMath::Multiply(viewMatrix, projectionMatrix));
 		Matrix4x4 viewportMatrix = MyMath::MakeViewPortMatrix(0, 0, float(kWindowWidth), float(kWindowHeight), 0.0f, 1.0f);
 
-		if (MyMath::IsCollision(sphere, plane))
+	
+		if (MyMath::IsCollision(segment, plane))
 		{
 			colorS1 = RED;
 		}
-		else 
+		else
 		{
 			colorS1 = WHITE;
 		}
@@ -72,7 +75,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 
 
-		MyMath::DrawShere(sphere, worldViewProjectionMatrix, viewportMatrix, colorS1);
+		MyMath::DrawLine(segment, worldViewProjectionMatrix, viewportMatrix, colorS1);
 		MyMath::DrawPlane(plane, worldViewProjectionMatrix, viewportMatrix, colorS2);
 
 
@@ -89,8 +92,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		ImGui::Begin("Debug");
 		ImGui::DragFloat3("cameraTRa", &cameraTranslate.x, 0.1f, -50.0f, 50.0f);
 		ImGui::DragFloat3("cameraRot", &cameraRotate.x, 0.1f, -50.0f, 50.0f);
-		ImGui::DragFloat3("sphereCenter", &sphere.center.x, 0.1f, -1.0f, 1.0f);
-		ImGui::DragFloat("sphereRadius", &sphere.radius, 0.1f, -1.0f, 1.0f);
+		ImGui::DragFloat3("segmentOrigin", &segment.origin.x, 0.1f, -1.0f, 1.0f);
+		ImGui::DragFloat3("segmentDiff", &segment.diff.x, 0.1f, -1.0f, 1.0f);
 		ImGui::DragFloat("planeDistance", &plane.distance, 0.1f, -1.0f, 5.0f);
 		ImGui::DragFloat3("planeNormal", &plane.normal.x, 0.1f, -1.0f, 1.0f);
 		plane.normal = MyMath::Normalize(plane.normal);
