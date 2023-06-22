@@ -1,12 +1,12 @@
 #include <Novice.h>
 #include "MyMath.h"
 #include "ImGuiManager.h"
+#include "Draw.h"
 
 const char kWindowTitle[] = "LE2B_13_コバヤシヒロタカ_タイトル";
 
 const int kWindowWidth = 1280;
 const int kWindowHeight = 720;
-
 
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
@@ -14,10 +14,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// ライブラリの初期化
 	Novice::Initialize(kWindowTitle, kWindowWidth, kWindowHeight);
 
-	
+
 	Vector3 cameraTranslate{ 0.0f, 1.9f, -6.49f };
 	Vector3 cameraRotate{ 0.26f, 0.0f, 0.0f };
-
 
 	Segment segment
 	{
@@ -25,11 +24,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		{1.0f, 1.0f, 1.0f}
 	};
 
-	Plane plane
-	{
-		{1.0f, 1.0f, 1.0f},
-		1.0f
-	};
+	
+	Triangle triangle;
+	triangle.vertices[0] = { 0.0f, 1.0f, 0.0f };
+	triangle.vertices[1] = { 1.0f, 0.0f, 0.0f };
+	triangle.vertices[2] = { -1.0f, 0.0f, 0.0f };
+
 
 	uint32_t colorS1 = WHITE;
 	uint32_t colorS2 = WHITE;
@@ -52,7 +52,37 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓更新処理ここから
 		///
 
-	
+		if (keys[DIK_W])
+		{
+			cameraTranslate.z += 0.1f;
+		}
+
+		if (keys[DIK_S])
+		{
+			cameraTranslate.z -= 0.1f;
+		}
+
+		if (keys[DIK_A])
+		{
+			cameraTranslate.x -= 0.1f;
+		}
+
+		if (keys[DIK_D])
+		{
+			cameraTranslate.x += 0.1f;
+		}
+
+		if (keys[DIK_Q])
+		{
+			cameraRotate.y += 0.1f;
+		}
+
+		if (keys[DIK_E])
+		{
+			cameraRotate.y -= 0.1f;
+		}
+
+
 		Matrix4x4 worldMatrix = MyMath::MakeAffineMatrix({ 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f });
 		Matrix4x4 cameraMatrix = MyMath::MakeAffineMatrix({ 1.0f, 1.0f, 1.0f }, cameraRotate, cameraTranslate);
 		Matrix4x4 viewMatrix = MyMath::Inverse(cameraMatrix);
@@ -60,12 +90,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		Matrix4x4 worldViewProjectionMatrix = MyMath::Multiply(worldMatrix, MyMath::Multiply(viewMatrix, projectionMatrix));
 		Matrix4x4 viewportMatrix = MyMath::MakeViewPortMatrix(0, 0, float(kWindowWidth), float(kWindowHeight), 0.0f, 1.0f);
 
-	
-		if (MyMath::IsCollision(segment, plane))
+
+		if (MyMath::IsCollision(triangle, segment))
 		{
 			colorS1 = RED;
 		}
-		else
+		else 
 		{
 			colorS1 = WHITE;
 		}
@@ -74,30 +104,25 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↑更新処理ここまで
 		///
 
-
-		MyMath::DrawLine(segment, worldViewProjectionMatrix, viewportMatrix, colorS1);
-		MyMath::DrawPlane(plane, worldViewProjectionMatrix, viewportMatrix, colorS2);
-
-
 		///
 		/// ↓描画処理ここから
 		///
 
 
-
-		MyMath::DrawGrid(worldViewProjectionMatrix, viewportMatrix);
-
-
+		MyDraw::DrawLine(segment, worldViewProjectionMatrix, viewportMatrix, colorS1);
+		MyDraw::DrawTriangle(triangle, worldViewProjectionMatrix, viewportMatrix, colorS2);
+		MyDraw::DrawGrid(worldViewProjectionMatrix, viewportMatrix);
 
 		ImGui::Begin("Debug");
 		ImGui::DragFloat3("cameraTRa", &cameraTranslate.x, 0.1f, -50.0f, 50.0f);
 		ImGui::DragFloat3("cameraRot", &cameraRotate.x, 0.1f, -50.0f, 50.0f);
 		ImGui::DragFloat3("segmentOrigin", &segment.origin.x, 0.1f, -1.0f, 1.0f);
 		ImGui::DragFloat3("segmentDiff", &segment.diff.x, 0.1f, -1.0f, 1.0f);
-		ImGui::DragFloat("planeDistance", &plane.distance, 0.1f, -1.0f, 5.0f);
-		ImGui::DragFloat3("planeNormal", &plane.normal.x, 0.1f, -1.0f, 1.0f);
-		plane.normal = MyMath::Normalize(plane.normal);
+		ImGui::DragFloat3("triVer0", &triangle.vertices[0].x, 0.1f, -1.0f, 5.0f);
+		ImGui::DragFloat3("triVer1", &triangle.vertices[1].x, 0.1f, -1.0f, 5.0f);
+		ImGui::DragFloat3("triVer2", &triangle.vertices[2].x, 0.1f, -1.0f, 5.0f);
 		ImGui::End();
+
 
 		///
 		/// ↑描画処理ここまで
