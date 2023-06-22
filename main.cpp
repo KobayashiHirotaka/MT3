@@ -17,14 +17,18 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Vector3 cameraTranslate{ 0.0f, 1.9f, -6.49f };
 	Vector3 cameraRotate{ 0.26f, 0.0f, 0.0f };
 
-	Sphere sphere1{
+	Sphere sphere1
+	{
 		{0.0f, 0.0f, 0.0f},
 		1.0f
 	};
-	Sphere sphere2{
+
+	Sphere sphere2
+	{
 		{0.0f, 0.0f, 0.0f},
 		0.5f
 	};
+
 	uint32_t colorS1 = WHITE;
 	uint32_t colorS2 = WHITE;
 
@@ -52,10 +56,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		Matrix4x4 worldViewProjectionMatrix = MyMath::Multiply(worldMatrix, MyMath::Multiply(viewMatrix, projectionMatrix));
 		Matrix4x4 viewportMatrix = MyMath::MakeViewPortMatrix(0, 0, float(kWindowWidth), float(kWindowHeight), 0.0f, 1.0f);
 
-		if (MyMath::IsCollision(sphere1, sphere2)) {
+		if (MyMath::IsCollision(sphere1, sphere2))
+		{
 			colorS1 = RED;
 		}
-		else {
+		else
+		{
 			colorS1 = WHITE;
 		}
 
@@ -73,10 +79,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 
 
-
 		MyMath::DrawGrid(worldViewProjectionMatrix, viewportMatrix);
-
-
 
 		ImGui::Begin("Debug");
 		ImGui::DragFloat3("sphere1", &sphere1.center.x, 0.1f, -1.0f, 1.0f);

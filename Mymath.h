@@ -1,4 +1,5 @@
 #pragma once
+#include <Novice.h>
 #include <cmath>
 #include <assert.h>
 
